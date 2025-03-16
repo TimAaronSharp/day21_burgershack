@@ -9,6 +9,8 @@ export class BurgersController extends BaseController {
     this.router
       .get('', this.getAllBurgers)
       .post('', this.createBurger)
+      .delete('/:burgerId', this.deleteBurger)
+      .put('/:burgerId', this.updateBurger)
   }
   /**
    * @param {import("express").Request} req
@@ -31,8 +33,37 @@ export class BurgersController extends BaseController {
   async createBurger(req, res, next) {
     try {
       const burgerData = req.body
-      const burger = await burgersService.createBurger(burgerData)
-      res.send(burger)
+      const createdBurger = await burgersService.createBurger(burgerData)
+      res.send(createdBurger)
+    } catch (error) {
+      next(error)
+    }
+  }
+  /**
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   * @param {import("express").NextFunction} next
+   */
+  async deleteBurger(req, res, next) {
+    try {
+      const burgerId = req.params.burgerId
+      const deleteMessage = await burgersService.deleteBurger(burgerId)
+      res.send(deleteMessage)
+    } catch (error) {
+      next(error)
+    }
+  }
+  /**
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   * @param {import("express").NextFunction} next
+   */
+  async updateBurger(req, res, next) {
+    try {
+      const burgerData = req.body
+      const burgerId = req.params.burgerId
+      const updateMessage = await burgersService.updateBurger(burgerData, burgerId)
+      res.send(updateMessage)
     } catch (error) {
       next(error)
     }
